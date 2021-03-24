@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: migrate-users-db
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=migrate_users
+      - MYSQL_USER=migrate_users
+      - MYSQL_PASSWORD=migrate_users
+      - MYSQL_ROOT_PASSWORD=migrate_users_root
+      - TZ=Europe/Berlin
+    volumes:
+      - ./db/.mysql:/var/lib/mysql
+    ports:
+      - 3322:3306
+  web:
+    container_name: migrate-users-web
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
